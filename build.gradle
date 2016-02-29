@@ -1,0 +1,50 @@
+buildscript {
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.4"
+  }
+}
+
+plugins {
+  id 'java'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '1.2.2'
+  id "net.ltgt.apt" version "0.4"
+}
+
+repositories {
+  mavenCentral()
+  maven {
+    url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+  }
+}
+
+def vertxVersion = '3.1.0'
+dependencies {
+  compile "io.vertx:vertx-core:$vertxVersion"
+  compile "io.vertx:vertx-web:$vertxVersion"
+  compile 'com.google.dagger:dagger:2.0.2'
+  apt 'com.google.dagger:dagger-compiler:2.0.2'
+  runtime 'org.glassfish:javax.annotation:10.0-b28'
+  testCompile "junit:junit:4.12"
+  testCompile "io.vertx:vertx-unit:$vertxVersion"
+ }
+
+mainClassName = 'io.vertx.core.Launcher'
+def mainVerticle = 'com.github.sedubois.MainVerticle'
+run {
+  args = ["run", mainVerticle]
+}
+
+shadowJar {
+  classifier = 'fat'
+  manifest {
+    attributes 'Main-Verticle': mainVerticle
+  }
+  mergeServiceFiles {
+    include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.8'
+}

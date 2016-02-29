@@ -1,0 +1,10 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Gradle
+build/
+.gradle/
+
+# Vert.x
+.vertx/
