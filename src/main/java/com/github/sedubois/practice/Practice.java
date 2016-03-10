@@ -58,4 +58,20 @@ public class Practice {
   public String toString() {
     return String.format("[totalSeconds = %d, remainingSeconds = %d, started = %b, timerId = %d]", totalSeconds, remainingSeconds, started, timerId);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Practice practice = (Practice) o;
+    return Objects.equals(totalSeconds, practice.totalSeconds) &&
+        Objects.equals(remainingSeconds, practice.remainingSeconds) &&
+        Objects.equals(started, practice.started) &&
+        Objects.equals(timerId, practice.timerId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(totalSeconds, remainingSeconds, started, timerId);
+  }
 }

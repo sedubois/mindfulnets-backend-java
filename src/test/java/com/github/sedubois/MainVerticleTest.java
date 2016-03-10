@@ -38,13 +38,16 @@ public class MainVerticleTest {
   public void createPracticeReturnsCreatedPractice(TestContext context) {
     final Async async = context.async();
 
-    long totalSeconds = 10;
-    String body = "{\"totalSeconds\": " + totalSeconds + "}";
+    long totalSeconds = 10, remainingSeconds = 5;
+    String body = "{\"totalSeconds\": " + totalSeconds + ", \"remainingSeconds\": " + remainingSeconds + "}";
     httpClient
-        .post(PORT, ADDRESS, "/api/practices", response -> response.handler(responseBody -> {
+        .put(PORT, ADDRESS, "/api/practices", response -> response.handler(responseBody -> {
           System.out.println(responseBody);
           Practice actual = Json.decodeValue(responseBody.toString(), Practice.class);
           Practice expected = new Practice(totalSeconds);
+          expected.setRemainingSeconds(remainingSeconds);
+          expected.setTimerId(0);
+          System.out.println("actual: " + actual+ ", expected: " + expected);
           context.assertTrue(actual.equals(expected));
           async.complete();
         }))
