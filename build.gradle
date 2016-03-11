@@ -48,3 +48,8 @@ shadowJar {
 task wrapper(type: Wrapper) {
   gradleVersion = '2.8'
 }
+
+// task called by Heroku for app deployment
+task stage {
+  dependsOn build
+}
