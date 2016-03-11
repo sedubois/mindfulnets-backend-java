@@ -8,3 +8,6 @@ build/
 
 # Vert.x
 .vertx/
+
+# Mac OS X
+.DS_Store
