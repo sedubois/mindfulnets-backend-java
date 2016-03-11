@@ -16,6 +16,9 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 // TODO use Spock / assertJ / rest assured to get given/when/then style
 @RunWith(VertxUnitRunner.class)
 public class MainVerticleTest {
@@ -25,14 +28,13 @@ public class MainVerticleTest {
   private Vertx vertx = Vertx.vertx();
   private HttpClient httpClient;
 
-  private static final DeploymentOptions DEPLOYMENT_OPTIONS = new DeploymentOptions()
-      .setConfig(new JsonObject()
-          .put("server.port", PORT)
-          .put("client.url", "http://localhost:3002"));
-
   @Before
-  public void setUp(TestContext context) {
-    vertx.deployVerticle(MainVerticle.class.getName(), DEPLOYMENT_OPTIONS, context.asyncAssertSuccess());
+  public void setUp(TestContext context) throws Exception {
+    String rawJsonConfig = new String(Files.readAllBytes(Paths.get("src/main/resources/development.json")));
+    JsonObject jsonConfig = new JsonObject(rawJsonConfig);
+    DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(jsonConfig);
+
+    vertx.deployVerticle(MainVerticle.class.getName(), deploymentOptions, context.asyncAssertSuccess());
     httpClient = vertx.createHttpClient();
   }
 

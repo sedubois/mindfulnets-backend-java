@@ -51,5 +51,6 @@ task wrapper(type: Wrapper) {
 
 // task called by Heroku for app deployment
 task stage {
-  dependsOn build
+  dependsOn test
+  dependsOn shadowJar
 }
