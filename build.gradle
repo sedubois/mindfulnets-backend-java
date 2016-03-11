@@ -37,6 +37,7 @@ run {
 
 shadowJar {
   classifier = 'fat'
+  archiveName = "mindfulnets-backend-${classifier}.${extension}"
   manifest {
     attributes 'Main-Verticle': mainVerticle
   }
