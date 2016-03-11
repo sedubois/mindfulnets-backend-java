@@ -17,14 +17,16 @@ public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start() throws Exception {
-    App app = DaggerApp.create();
+    int serverPort = config().getInteger("server.port");
+    App app = com.github.sedubois.DaggerApp.create();
     Router router = getRouter(app.practiceController().getRouter());
-    vertx.createHttpServer().requestHandler(router::accept).listen(3001);
+    vertx.createHttpServer().requestHandler(router::accept).listen(serverPort);
   }
 
   private Router getRouter(Router... subRouters) {
+    String clientUrl = config().getString("client.url");
     Router router = Router.router(vertx);
-    router.route("/api*").handler(CorsHandler.create("http://localhost:3002")
+    router.route("/api*").handler(CorsHandler.create(clientUrl)
         .allowedMethod(HttpMethod.PUT));
     stream(subRouters).forEach(r -> router.mountSubRouter("/api", r));
     router.route("/eventbus/*").handler(eventBusHandler());

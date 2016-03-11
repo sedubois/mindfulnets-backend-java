@@ -1,0 +1,4 @@
+{
+  "server.port": 3001,
+  "client.url": "http://localhost:3002"
+}

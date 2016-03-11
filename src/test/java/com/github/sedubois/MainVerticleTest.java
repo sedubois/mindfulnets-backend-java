@@ -2,6 +2,8 @@ package com.github.sedubois;
 
 import com.github.sedubois.practice.Practice;
 
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.json.JsonObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +25,14 @@ public class MainVerticleTest {
   private Vertx vertx = Vertx.vertx();
   private HttpClient httpClient;
 
+  private static final DeploymentOptions DEPLOYMENT_OPTIONS = new DeploymentOptions()
+      .setConfig(new JsonObject()
+          .put("server.port", PORT)
+          .put("client.url", "http://localhost:3002"));
+
   @Before
   public void setUp(TestContext context) {
-    vertx.deployVerticle(MainVerticle.class.getName(), context.asyncAssertSuccess());
+    vertx.deployVerticle(MainVerticle.class.getName(), DEPLOYMENT_OPTIONS, context.asyncAssertSuccess());
     httpClient = vertx.createHttpClient();
   }
 
@@ -47,7 +54,6 @@ public class MainVerticleTest {
           Practice expected = new Practice(totalSeconds);
           expected.setRemainingSeconds(remainingSeconds);
           expected.setTimerId(0);
-          System.out.println("actual: " + actual+ ", expected: " + expected);
           context.assertTrue(actual.equals(expected));
           async.complete();
         }))
