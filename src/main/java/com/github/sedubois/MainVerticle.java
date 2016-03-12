@@ -43,6 +43,8 @@ public class MainVerticle extends AbstractVerticle {
         .bridge(options, event -> {
           if (event.type() == BridgeEventType.SOCKET_CREATED) {
             System.out.println("A socket was created");
+          } else if (event.type() == BridgeEventType.SOCKET_CLOSED) {
+            System.out.println("A socket was closed");
           }
           event.complete(true);
         });
