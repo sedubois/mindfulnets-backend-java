@@ -33,6 +33,7 @@ public class PracticeController {
 
   private void update(RoutingContext routingContext) {
     Practice practice = Json.decodeValue(routingContext.getBodyAsString(), Practice.class);
+    System.out.println("Received update request: " + practice);
     practice = service.update(practice);
     routingContext.response()
         .setStatusCode(200)
