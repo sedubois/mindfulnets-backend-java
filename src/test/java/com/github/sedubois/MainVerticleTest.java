@@ -30,11 +30,7 @@ public class MainVerticleTest {
 
   @Before
   public void setUp(TestContext context) throws Exception {
-    String rawJsonConfig = new String(Files.readAllBytes(Paths.get("src/main/resources/development.json")));
-    JsonObject jsonConfig = new JsonObject(rawJsonConfig);
-    DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(jsonConfig);
-
-    vertx.deployVerticle(MainVerticle.class.getName(), deploymentOptions, context.asyncAssertSuccess());
+    vertx.deployVerticle(MainVerticle.class.getName(), context.asyncAssertSuccess());
     httpClient = vertx.createHttpClient();
   }
 
