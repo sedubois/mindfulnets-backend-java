@@ -27,10 +27,14 @@ public class MainVerticle extends AbstractVerticle {
   }
 
   private Router getRouter(Router... subRouters) {
-    String websiteUrl = ofNullable(getenv("WEBSITE_URL")).orElse("http://localhost:3002");
     Router router = Router.router(vertx);
-    router.route("/api*").handler(CorsHandler.create(websiteUrl)
-        .allowedMethod(HttpMethod.PUT));
+    router.route("/api*").handler(CorsHandler.create("*")
+        .allowedMethod(HttpMethod.GET)
+        .allowedMethod(HttpMethod.POST)
+        .allowedMethod(HttpMethod.PUT)
+        .allowedMethod(HttpMethod.DELETE)
+        .allowedMethod(HttpMethod.OPTIONS)
+        .allowedHeader("Content-Type"));
     stream(subRouters).forEach(r -> router.mountSubRouter("/api", r));
     router.route("/eventbus/*").handler(eventBusHandler());
     router.route().failureHandler(ErrorHandler.create(true));
