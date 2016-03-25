@@ -61,19 +61,19 @@ public class PracticeService {
 
   private void setTotalSeconds(long totalSeconds) {
     this.practice.setTotalSeconds(totalSeconds);
-    System.out.println("Publishing timer.totalSeconds=" + totalSeconds + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("timer.totalSeconds", totalSeconds);
+    System.out.println("Publishing app.timer.totalSeconds=" + totalSeconds + " to eventBus");
+    Vertx.currentContext().owner().eventBus().publish("app.timer.totalSeconds", totalSeconds);
   }
 
   private void setRemainingSeconds(long remainingSeconds) {
     this.practice.setRemainingSeconds(remainingSeconds);
-    System.out.println("Publishing timer.remainingSeconds=" + remainingSeconds + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("timer.remainingSeconds", remainingSeconds);
+    System.out.println("Publishing app.timer.remainingSeconds=" + remainingSeconds + " to eventBus");
+    Vertx.currentContext().owner().eventBus().publish("app.timer.remainingSeconds", remainingSeconds);
   }
 
   private void setStarted(boolean started) {
     this.practice.setStarted(started);
-    System.out.println("Publishing timer.started=" + started + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("timer.started", started);
+    System.out.println("Publishing app.timer.started=" + started + " to eventBus");
+    Vertx.currentContext().owner().eventBus().publish("app.timer.started", started);
   }
 }

@@ -44,7 +44,7 @@ public class MainVerticle extends AbstractVerticle {
 
   private SockJSHandler eventBusHandler() {
     BridgeOptions options = new BridgeOptions()
-        .addOutboundPermitted(new PermittedOptions().setAddressRegex("timer..*"));
+        .addOutboundPermitted(new PermittedOptions().setAddressRegex("app..*"));
     return SockJSHandler
         .create(vertx)
         .bridge(options, event -> {
