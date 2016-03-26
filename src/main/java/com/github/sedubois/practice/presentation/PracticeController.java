@@ -12,6 +12,11 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
+import static io.vertx.core.Vertx.currentContext;
+import static io.vertx.core.json.Json.decodeValue;
+import static io.vertx.core.json.Json.encodePrettily;
+import static io.vertx.ext.web.Router.router;
+
 @Singleton
 public class PracticeController {
 
@@ -23,7 +28,7 @@ public class PracticeController {
   }
 
   public Router getRouter() {
-    Router router = Router.router(Vertx.currentContext().owner());
+    Router router = router(currentContext().owner());
     router.route().consumes("application/json");
     router.route().produces("application/json");
     router.route("/practices*").handler(BodyHandler.create());
@@ -32,11 +37,11 @@ public class PracticeController {
   }
 
   private void update(RoutingContext routingContext) {
-    Practice practice = Json.decodeValue(routingContext.getBodyAsString(), Practice.class);
+    Practice practice = decodeValue(routingContext.getBodyAsString(), Practice.class);
     System.out.println("Received update request: " + practice);
     practice = service.update(practice);
     routingContext.response()
         .setStatusCode(200)
-        .end(Json.encodePrettily(practice));
+        .end(encodePrettily(practice));
   }
 }

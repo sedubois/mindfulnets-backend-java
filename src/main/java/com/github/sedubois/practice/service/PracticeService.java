@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import io.vertx.core.Vertx;
 
+import static io.vertx.core.Vertx.currentContext;
+
 @Singleton
 public class PracticeService {
 
@@ -17,14 +19,13 @@ public class PracticeService {
   }
 
   public Practice update(Practice practice) {
-    Vertx vertx = Vertx.currentContext().owner();
 
     if (this.practice == null) {
       this.practice = new Practice(practice.getTotalSeconds());
     }
 
     if (this.practice.getTimerId() != null) {
-      vertx.cancelTimer(this.practice.getTimerId());
+      currentContext().owner().cancelTimer(this.practice.getTimerId());
     }
 
     if (practice.getTotalSeconds() != null) {
@@ -44,7 +45,7 @@ public class PracticeService {
   }
 
   private void doPractice() {
-    Vertx vertx = Vertx.currentContext().owner();
+    Vertx vertx = currentContext().owner();
 
     if (this.practice.isStarted()) {
       this.practice.setTimerId(vertx.setPeriodic(1000, id -> {
@@ -62,18 +63,18 @@ public class PracticeService {
   private void setTotalSeconds(long totalSeconds) {
     this.practice.setTotalSeconds(totalSeconds);
     System.out.println("Publishing app.timer.totalSeconds=" + totalSeconds + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("app.timer.totalSeconds", totalSeconds);
+    currentContext().owner().eventBus().publish("app.timer.totalSeconds", totalSeconds);
   }
 
   private void setRemainingSeconds(long remainingSeconds) {
     this.practice.setRemainingSeconds(remainingSeconds);
     System.out.println("Publishing app.timer.remainingSeconds=" + remainingSeconds + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("app.timer.remainingSeconds", remainingSeconds);
+    currentContext().owner().eventBus().publish("app.timer.remainingSeconds", remainingSeconds);
   }
 
   private void setStarted(boolean started) {
     this.practice.setStarted(started);
     System.out.println("Publishing app.timer.started=" + started + " to eventBus");
-    Vertx.currentContext().owner().eventBus().publish("app.timer.started", started);
+    currentContext().owner().eventBus().publish("app.timer.started", started);
   }
 }

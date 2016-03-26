@@ -22,7 +22,9 @@ public class MainVerticle extends AbstractVerticle {
   public void start() throws Exception {
     int backendPort = parseInt(ofNullable(getenv("PORT")).orElse("3001"));
     App app = com.github.sedubois.DaggerApp.create();
-    Router router = getRouter(app.practiceController().getRouter());
+    Router router = getRouter(
+        app.practiceController().getRouter(),
+        app.userController().getRouter());
     vertx.createHttpServer().requestHandler(router::accept).listen(backendPort);
   }
 
