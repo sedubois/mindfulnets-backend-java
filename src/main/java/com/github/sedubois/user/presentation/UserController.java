@@ -47,9 +47,13 @@ public class UserController {
   private void get(RoutingContext routingContext) {
     String id = routingContext.request().getParam("id");
     User user = service.get(parseInt(id));
-    routingContext.response().setStatusCode(200)
-        .putHeader("content-type", "application/json; charset=utf-8")
-        .end(encodePrettily(user));
+    if (user == null) {
+      routingContext.response().setStatusCode(404).end();
+    } else {
+      routingContext.response().setStatusCode(200)
+          .putHeader("content-type", "application/json; charset=utf-8")
+          .end(encodePrettily(user));
+    }
   }
 
   private void list(RoutingContext routingContext) {

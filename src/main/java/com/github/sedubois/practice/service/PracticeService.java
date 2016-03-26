@@ -1,11 +1,10 @@
 package com.github.sedubois.practice.service;
 
 import com.github.sedubois.practice.Practice;
+import io.vertx.core.Vertx;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import io.vertx.core.Vertx;
 
 import static io.vertx.core.Vertx.currentContext;
 
@@ -62,19 +61,19 @@ public class PracticeService {
 
   private void setTotalSeconds(long totalSeconds) {
     this.practice.setTotalSeconds(totalSeconds);
-    System.out.println("Publishing app.timer.totalSeconds=" + totalSeconds + " to eventBus");
-    currentContext().owner().eventBus().publish("app.timer.totalSeconds", totalSeconds);
+    System.out.println("Publishing app.practice.totalSeconds=" + totalSeconds + " to eventBus");
+    currentContext().owner().eventBus().publish("app.practice.totalSeconds", totalSeconds);
   }
 
   private void setRemainingSeconds(long remainingSeconds) {
     this.practice.setRemainingSeconds(remainingSeconds);
-    System.out.println("Publishing app.timer.remainingSeconds=" + remainingSeconds + " to eventBus");
-    currentContext().owner().eventBus().publish("app.timer.remainingSeconds", remainingSeconds);
+    System.out.println("Publishing app.practice.remainingSeconds=" + remainingSeconds + " to eventBus");
+    currentContext().owner().eventBus().publish("app.practice.remainingSeconds", remainingSeconds);
   }
 
   private void setStarted(boolean started) {
     this.practice.setStarted(started);
-    System.out.println("Publishing app.timer.started=" + started + " to eventBus");
-    currentContext().owner().eventBus().publish("app.timer.started", started);
+    System.out.println("Publishing app.practice.started=" + started + " to eventBus");
+    currentContext().owner().eventBus().publish("app.practice.started", started);
   }
 }
