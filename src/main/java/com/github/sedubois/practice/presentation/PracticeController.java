@@ -37,7 +37,6 @@ public class PracticeController {
     practice = service.update(practice);
     routingContext.response()
         .setStatusCode(200)
-        .putHeader("content-type", "application/json; charset=utf-8")
         .end(Json.encodePrettily(practice));
   }
 }
