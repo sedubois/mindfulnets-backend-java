@@ -5,9 +5,8 @@ import io.vertx.core.json.Json;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,12 +22,13 @@ public class UserService {
   UserService() {}
 
   public User create() {
-    User user = new User(USER_ID_GENERATOR.getAndIncrement());
-    addUser(user);
-    return user;
+    User newUser = new User(USER_ID_GENERATOR.getAndIncrement());
+    addUser(newUser);
+    return newUser;
   }
 
   private void addUser(User user) {
+    System.out.println("Adding user " + user);
     this.users.put(user.getId(), user);
     String serializedUser = Json.encode(user);
     System.out.println("Publishing user app.users.new=" + serializedUser + " to eventBus");
@@ -36,6 +36,10 @@ public class UserService {
   }
 
   public User get(long id) {
-    return users.get(id);
+    return this.users.get(id);
+  }
+
+  public Collection<User> list() {
+    return this.users.values();
   }
 }
