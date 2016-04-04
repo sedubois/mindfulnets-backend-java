@@ -31,8 +31,8 @@ public class UserService {
     System.out.println("Adding user " + user);
     this.users.put(user.getId(), user);
     String serializedUser = Json.encode(user);
-    System.out.println("Publishing user app.users.new=" + serializedUser + " to eventBus");
-    currentContext().owner().eventBus().publish("app.users.new", serializedUser);
+    System.out.println("Publishing user app.users.add.user=" + serializedUser + " to eventBus");
+    currentContext().owner().eventBus().publish("app.users.add.user", serializedUser);
   }
 
   public User get(long id) {
