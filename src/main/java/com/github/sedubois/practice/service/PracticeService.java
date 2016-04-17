@@ -15,6 +15,11 @@ public class PracticeService {
 
   @Inject
   PracticeService() {
+    this.practice = new Practice(6);
+  }
+
+  public Practice get() {
+    return this.practice;
   }
 
   public Practice update(Practice practice) {
