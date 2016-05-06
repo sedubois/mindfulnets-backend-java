@@ -5,6 +5,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.ErrorHandler;
+import io.vertx.ext.web.handler.LoggerHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeEventType;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
@@ -30,6 +31,7 @@ public class MainVerticle extends AbstractVerticle {
 
   private Router getRouter(Router... subRouters) {
     Router router = Router.router(vertx);
+    router.route().handler(LoggerHandler.create());
     router.route("/api*").handler(CorsHandler.create("*")
         .allowedMethod(HttpMethod.GET)
         .allowedMethod(HttpMethod.POST)
