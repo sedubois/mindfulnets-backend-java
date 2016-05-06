@@ -6,43 +6,47 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.ErrorHandler;
 import io.vertx.ext.web.handler.LoggerHandler;
-import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.ext.web.handler.sockjs.BridgeEventType;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.System.getenv;
-import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 
 public class MainVerticle extends AbstractVerticle {
 
+  private static final int PORT = parseInt(ofNullable(getenv("PORT")).orElse("3001"));
+
   @Override
   public void start() throws Exception {
-    int backendPort = parseInt(ofNullable(getenv("PORT")).orElse("3001"));
-    App app = com.github.sedubois.DaggerApp.create();
-    Router router = getRouter(
-        app.practiceController().getRouter(),
-        app.userController().getRouter());
-    vertx.createHttpServer().requestHandler(router::accept).listen(backendPort);
+    vertx
+        .createHttpServer()
+        .requestHandler(router()::accept)
+        .listen(PORT);
   }
 
-  private Router getRouter(Router... subRouters) {
+  private Router router() {
     Router router = Router.router(vertx);
     router.route().handler(LoggerHandler.create());
-    router.route("/api*").handler(CorsHandler.create("*")
+    router.route().failureHandler(ErrorHandler.create(true));
+    router.mountSubRouter("/api", apiRouter());
+    router.route("/eventbus/*").handler(eventBusHandler());
+    return router;
+  }
+
+  private Router apiRouter() {
+    Router router = Router.router(vertx);
+    router.route().handler(CorsHandler.create("*")
         .allowedMethod(HttpMethod.GET)
         .allowedMethod(HttpMethod.POST)
         .allowedMethod(HttpMethod.PUT)
         .allowedMethod(HttpMethod.DELETE)
         .allowedMethod(HttpMethod.OPTIONS)
         .allowedHeader("Content-Type"));
-    stream(subRouters).forEach(r -> router.mountSubRouter("/api", r));
-    router.route("/eventbus/*").handler(eventBusHandler());
-    router.route().failureHandler(ErrorHandler.create(true));
-    router.route().handler(StaticHandler.create().setCachingEnabled(false));
+    App app = com.github.sedubois.DaggerApp.create();
+    router.mountSubRouter("/", app.practiceController().getRouter());
+    router.mountSubRouter("/", app.userController().getRouter());
     return router;
   }
 
@@ -52,11 +56,7 @@ public class MainVerticle extends AbstractVerticle {
     return SockJSHandler
         .create(vertx)
         .bridge(options, event -> {
-          if (event.type() == BridgeEventType.SOCKET_CREATED) {
-            System.out.println("A socket was created");
-          } else if (event.type() == BridgeEventType.SOCKET_CLOSED) {
-            System.out.println("A socket was closed");
-          }
+          System.out.println(event.type());
           event.complete(true);
         });
   }
