@@ -4,7 +4,6 @@ import com.github.sedubois.practice.Practice;
 import com.github.sedubois.practice.service.PracticeService;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,9 +25,6 @@ public class PracticeController {
 
   public Router getRouter() {
     Router router = router(currentContext().owner());
-    router.route().consumes("application/json");
-    router.route().produces("application/json");
-    router.route("/practices*").handler(BodyHandler.create());
     router.get("/practices").handler(this::get);
     router.put("/practices").handler(this::update);
     return router;

@@ -4,7 +4,6 @@ import com.github.sedubois.user.User;
 import com.github.sedubois.user.service.UserService;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,9 +25,6 @@ public class UserController {
 
   public Router getRouter() {
     Router router = Router.router(currentContext().owner());
-    router.route().consumes("application/json");
-    router.route().produces("application/json");
-    router.route("/users*").handler(BodyHandler.create());
     router.post("/users").handler(this::create);
     router.get("/users/:id").handler(this::get);
     router.get("/users").handler(this::list);
